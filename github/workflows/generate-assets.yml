@@ -1,0 +1,53 @@
+# --- START OF FILE .github/workflows/generate-assets.yml ---
+
+name: Generate Asset List
+
+# Yeh Action kab chalega: Jab bhi 'main' branch par code push ho
+on:
+  push:
+    branches:
+      - main
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest # Yeh GitHub ke server par chalega
+
+    steps:
+      # Step 1: Aapka repository ka code server par checkout karein
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      # Step 2: Node.js environment set up karein
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18' # Node.js ka version
+
+      # Step 3: Script ko chalayein taake assets.json banaye
+      - name: Generate assets.json
+        run: node generate-assets.js
+        
+      # Step 4: Check karein ke kya assets.json file mein koi change hua hai
+      - name: Check for changes
+        id: git-check
+        run: |
+          if [[ -z $(git status -s) ]]; then
+            echo "No changes to commit."
+            echo "changed=false" >> $GITHUB_OUTPUT
+          else
+            echo "Changes detected. Committing assets.json."
+            echo "changed=true" >> $GITHUB_OUTPUT
+          fi
+
+      # Step 5: Agar change hua hai, to nayi file ko repository mein commit aur push karein
+      - name: Commit and push if changed
+        if: steps.git-check.outputs.changed == 'true'
+        run: |
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+          git add assets.json
+          git commit -m "Automated: Update assets.json"
+          git push
+
+# --- END OF FILE .github/workflows/generate-assets.yml ---
