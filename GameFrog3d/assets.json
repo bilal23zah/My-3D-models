@@ -1,0 +1,17 @@
+[
+    {
+        "id": "crate_01",
+        "name": "Wooden Crate",
+        "path": "./assets/models/base_human.glb",
+        "thumbnail": "https://placehold.co/150x150/8B5A2B/FFFFFF?text=Crate",
+        "category": "Props"
+    },
+    {
+        "id": "helmet_01",
+        "name": "Damaged Helmet",
+        "path": "./assets/models/tree.glb",
+        "thumbnail": "https://placehold.co/150x150/455A64/FFFFFF?text=Helmet",
+        "category": "Props"
+    }
+  
+]

@@ -1,0 +1,143 @@
+<!-- --- START OF FILE index.html --- -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>GameForge 3D - World Editor</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="editor-container">
+        <!-- Top Navigation Bar -->
+        <nav id="top-nav">
+            <div class="logo">GameForge 3D</div>
+            <div class="menu-buttons desktop-only">
+                <button id="undo-btn" class="icon-btn" title="Undo (Ctrl+Z)" disabled>
+                    <svg viewBox="0 0 24 24"><path d="M12.5 8c-2.65 0-5.05.99-6.9 2.6L2 7v9h9l-3.62-3.62c1.39-1.16 3.16-1.88 5.12-1.88 3.54 0 6.55 2.31 7.6 5.5l2.37-.78C21.08 11.03 17.15 8 12.5 8z"></path></svg>
+                </button>
+                <button id="redo-btn" class="icon-btn" title="Redo (Ctrl+Y)" disabled>
+                    <svg viewBox="0 0 24 24"><path d="M18.4 10.6C16.55 8.99 14.15 8 11.5 8c-4.65 0-8.58 3.03-9.96 7.22L3.9 16c1.05-3.19 4.05-5.5 7.6-5.5 1.96 0 3.73.72 5.12 1.88L13 16h9V7l-3.6 3.6z"></path></svg>
+                </button>
+                <button id="save-scene-btn">💾 Save</button>
+                <button id="delete-object-btn" class="danger-btn">🗑️ Delete</button>
+            </div>
+            <div class="right-actions">
+                <button id="world-tools-btn" class="tool-btn">🛠️</button>
+                <button id="toggle-left-panel" class="mobile-only">☰</button>
+                <button id="toggle-right-panel" class="mobile-only">⚙️</button>
+            </div>
+        </nav>
+
+        <!-- Main Content Area -->
+        <main id="main-content">
+            <!-- Left Panel: Scene Hierarchy -->
+            <aside id="left-panel">
+                <div class="panel-header">
+                    <h3>Scene</h3>
+                    <div class="panel-actions">
+                        <div class="dropdown">
+                            <button id="add-shape-btn" class="dropdown-btn">+ Shape ▼</button>
+                            <ul id="shape-dropdown-list" class="dropdown-content">
+                                <li data-shape="cube">Cube</li><li data-shape="sphere">Sphere</li><li data-shape="cylinder">Cylinder</li><li data-shape="plane">Plane</li><li data-shape="cone">Cone</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <ul id="scene-hierarchy-list"></ul>
+            </aside>
+
+            <!-- Center Panel: 3D Viewport -->
+            <div id="center-panel">
+                <canvas id="c"></canvas>
+                <div id="gizmo-container" class="hidden">
+                    <div class="bounding-box"></div>
+                    <div class="gizmo-handle" id="gizmo-duplicate"><svg viewBox="0 0 24 24"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"></path></svg></div>
+                    <div class="gizmo-handle" id="gizmo-scale"><svg viewBox="0 0 24 24"><path d="M15 3h6v6l-2-2-4 4-2-2 4-4-2-2zM3 9V3h6l-2 2 4 4-2 2-4-4-2 2zM9 21H3v-6l2 2 4-4 2 2-4 4 2 2zM21 15v6h-6l2-2-4-4 2-2 4 4 2-2z"></path></svg></div>
+                    <div class="gizmo-handle" id="gizmo-rotate-z"><svg viewBox="0 0 24 24"><path d="M7.49 18.5c.83 1.28 2.13 2.22 3.66 2.45v-2.12c-.9-.21-1.68-.7-2.26-1.39L7.49 18.5zM12 4c-4.42 0-8 3.58-8 8s3.58 8 8 8 8-3.58 8-8-3.58-8-8-8zm0 14c-3.31 0-6-2.69-6-6s2.69-6 6-6 6 2.69 6 6-2.69 6-6 6z"></path></svg></div>
+                    <div class="gizmo-handle" id="gizmo-rotate-y"><svg viewBox="0 0 24 24" transform="rotate(90)"><path d="M7.49 18.5c.83 1.28 2.13 2.22 3.66 2.45v-2.12c-.9-.21-1.68-.7-2.26-1.39L7.49 18.5zM12 4c-4.42 0-8 3.58-8 8s3.58 8 8 8 8-3.58 8-8-3.58-8-8-8zm0 14c-3.31 0-6-2.69-6-6s2.69-6 6-6 6 2.69 6 6-2.69 6-6 6z"></path></svg></div>
+                    <div class="gizmo-handle" id="gizmo-move-y"><svg viewBox="0 0 24 24"><path d="M12 8l-4 4h3v4h2v-4h3l-4-4zm0 9l4-4h-3v-4h-2v4H8l4 4z"></path></svg></div>
+                </div>
+            </div>
+
+            <!-- Right Panel: Object Inspector -->
+            <aside id="right-panel">
+                <div class="panel-header"><h3>Inspector</h3></div>
+                <div id="inspector-content"><p class="placeholder">Select an object to see its properties.</p></div>
+            </aside>
+
+            <!-- === NAYA FLOATING ACTION BUTTON === -->
+            <button id="add-asset-btn" class="fab" title="Add Asset">+</button>
+        </main>
+        
+        <footer id="bottom-bar">
+            <div id="scene-info">Objects: 0 | Selected: None</div><div id="performance-info">FPS: --</div>
+        </footer>
+    </div>
+
+    <!-- World Editor Panels Container -->
+    <div id="world-editor-container" class="hidden">
+        <div id="tools-panel" class="editor-panel">
+            <div class="panel-header"><h4>Tools</h4><button class="close-panel-btn">×</button></div>
+            <ul class="panel-list">
+                <li id="open-style-panel-btn">🎨 Style<span>></span></li>
+                <li id="open-terrain-panel-btn">⛰️ Terrain Editor<span>></span></li>
+            </ul>
+        </div>
+        <div id="style-panel" class="editor-panel hidden">
+             <div class="panel-header"><h4>Style Editor</h4><button class="close-panel-btn">×</button></div>
+             <div class="panel-content"><p>Style editor features are under development.</p></div>
+        </div>
+        <div id="terrain-panel" class="editor-panel hidden">
+            <div class="panel-header"><h4>Terrain Editor</h4><button class="close-panel-btn">×</button></div>
+            <div id="terrain-editor-content" class="panel-content"></div>
+        </div>
+    </div>
+    
+    <!-- === NAYA ASSET BROWSER POPUP === -->
+    <div id="asset-browser-popup" class="popup-overlay hidden">
+        <div class="popup-content">
+            <div class="popup-header">
+                <h2>Asset Browser</h2>
+                <button id="close-asset-popup-btn" class="close-popup-btn">×</button>
+            </div>
+            <div class="popup-toolbar">
+                <input type="search" id="asset-search-bar" placeholder="Search assets...">
+                <div class="filter-dropdown">
+                    <button class="filter-btn">All Categories ▼</button>
+                    <ul class="filter-list">
+                        <li>All</li>
+                        <li>Environment</li>
+                        <li>Props</li>
+                        <li>Characters</li>
+                    </ul>
+                </div>
+                <button id="import-asset-btn" class="import-btn">Import</button>
+            </div>
+            <div class="popup-body">
+                <div class="asset-grid">
+                    <p class="asset-placeholder">No assets found. Click 'Import' to add new models.</p>
+                </div>
+            </div>
+            <div class="popup-footer">
+                <button id="add-selected-asset-btn" class="apply-btn">Add to Scene</button>
+            </div>
+        </div>
+    </div>
+    
+    <div id="loading-overlay" class="hidden">
+        <div class="loading-spinner"></div>
+        <p id="loading-text">Loading...</p>
+    </div>
+
+    <script type="importmap">{
+        "imports": {
+            "three": "https://unpkg.com/three@0.158.0/build/three.module.js", 
+            "three/addons/": "https://unpkg.com/three@0.158.0/examples/jsm/",
+            "simplex-noise": "https://cdn.skypack.dev/simplex-noise@4.0.1"
+        }
+    }</script>
+    <script type="module" src="main.js"></script>
+</body>
+</html>
+<!-- --- END OF FILE index.html --- -->
